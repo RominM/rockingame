@@ -2,7 +2,9 @@
     <div class='index'>     
         MAIN PAGE
         <h-icon :icon="AiChipIcon" />
-        <space-lander />
+        <client-only>
+            <space-lander />
+        </client-only>
     </div>
 </template>
 

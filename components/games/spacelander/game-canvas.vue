@@ -5,67 +5,70 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRocket } from '~/composables/games/spacelander/useRocket'
 
 const canvas = ref<HTMLCanvasElement | null>(null)
+let ctx: CanvasRenderingContext2D | null = null
+let loop = 0
+let rocketImg: HTMLImageElement
+
 const { loopFn, rocket, keys } = useRocket()
 
-let ctx: CanvasRenderingContext2D | null = null
-let loop: number
+const rocketLoaded = ref(false)
+
+onMounted(() => {
+  if (!canvas.value) return
+  ctx = canvas.value.getContext('2d')
+
+  rocketImg = new Image()
+  rocketImg.src = "/games/spaceLander/rocket.png"
+  rocketImg.onload = () => {
+    rocketLoaded.value = true
+    loop = requestAnimationFrame(loopFrame)
+  }
+
+  const onKeyDown = (e: KeyboardEvent) => keys[e.key] = true
+  const onKeyUp = (e: KeyboardEvent) => keys[e.key] = false
+
+  window.addEventListener('keydown', onKeyDown)
+  window.addEventListener('keyup', onKeyUp)
+
+  onBeforeUnmount(() => {
+    cancelAnimationFrame(loop)
+    window.removeEventListener('keydown', onKeyDown)
+    window.removeEventListener('keyup', onKeyUp)
+  })
+})
 
 const drawRocket = () => {
-  if (!ctx) return
+  if (!ctx || !rocketLoaded.value) return
+  
   const r = rocket.value
-  // Corps
-  ctx.fillStyle = "#ffffff"
-  ctx.fillRect(r.x, r.y, r.width, r.height)
-  // Nez
-  ctx.beginPath()
-  ctx.moveTo(r.x, r.y)
-  ctx.lineTo(r.x + r.width, r.y)
-  ctx.lineTo(r.x + r.width / 2, r.y - 12)
-  ctx.closePath()
-  ctx.fill()
-  // Cockpit
-  ctx.fillStyle = "#4fc3f7"
-  ctx.beginPath()
-  ctx.ellipse(r.x + r.width / 2, r.y + 10, 6, 8, 0, 0, Math.PI*2)
-  ctx.fill()
-  // Ailettes
-  ctx.fillStyle = "#888"
-  ctx.fillRect(r.x-6, r.y+20, 6, 12)
-  ctx.fillRect(r.x + r.width, r.y+20, 6, 12)
+  ctx.drawImage(rocketImg, r.x, r.y, r.width, r.height)
 }
 
 const draw = () => {
   if (!ctx) return
   ctx.clearRect(0, 0, 400, 600)
-  // Sol
+
   ctx.fillStyle = "#444"
   ctx.fillRect(0, 580, 400, 20)
+
   drawRocket()
 }
 
-onMounted(() => {
-  if (!canvas.value) return
-  ctx = canvas.value.getContext('2d')
-  window.addEventListener('keydown', (e) => keys[e.key]=true)
-  window.addEventListener('keyup', (e) => keys[e.key]=false)
-  loop = requestAnimationFrame(function loopFrame() {
-    loopFn()
-    draw()
-    loop = requestAnimationFrame(loopFrame)
-  })
-})
-
-onBeforeUnmount(() => {
-  cancelAnimationFrame(loop)
-})
+const loopFrame = () => {
+  loopFn()
+  draw()
+  loop = requestAnimationFrame(loopFrame)
+}
 </script>
 
-<style scoped lang="scss">
-.game-canvas {
-  
+
+<style scoped>
+.game-canvas canvas {
+  display: block;
+  margin: 0 auto;
+  background: #000;
 }
 </style>
