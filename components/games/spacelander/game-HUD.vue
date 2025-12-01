@@ -1,11 +1,9 @@
 <template>
   <div class="game-HUD">
     <life id="life" />
-
+    <level id="level"/>
     <fuel-tank id="fuel" />
-
     <speed id="speed" />
-
     <p v-if="gameOver" class="game-over">{{ win ? "You win" : "You loose" }}</p> 
   </div>
 </template>
@@ -23,6 +21,11 @@ const {
 .game-HUD {
   position: absolute;
   inset: 0;
+  #level {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+  }
   #life {
     position: absolute;
     top: 25px;
