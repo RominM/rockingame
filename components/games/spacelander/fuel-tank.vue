@@ -1,44 +1,40 @@
 <template>
   <div class="fuel-tank">
-    
     <label class="fuel-tank__label">
-      <!-- <span>{{ fuel.toFixed() }}/100</span> -->
-      <input 
-      class="fuel-tank__label__input" 
-      type="range" 
-      max="100" 
-      :value="fuel"
-      @input="updateFuel($event)"
-      :style="sliderStyle"
+      <h-icon :icon="PetrolPumpIcon" />
+      <input
+        class="fuel-tank__label__input" 
+        type="range" 
+        max="100" 
+        :value="fuel"
+        @input="updateFuel($event)"
+        :style="sliderStyle"
       />
+      <span>{{ fuel.toFixed() }}/100</span>
     </label>
-    <h-icon :icon="PetrolPumpIcon" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { PetrolPumpIcon } from '@hugeicons/core-free-icons';
-import { computed } from 'vue';
 import { useRocket } from '~/composables/games/spacelander/useRocket';
 
-const { fuel } = useRocket();
+const { fuel } = useRocket()
 
-// Crée un style dynamique pour le gradient
 const sliderStyle = computed(() => {
-  const percent = fuel.value; // 0 à 100
+  const percent = fuel.value
   return {
     background: `linear-gradient(to right, 
-      #ffeb3b 0%,      /* jaune */
-      #ff9800 ${percent * 0.6}%, /* orange */
-      #f44336 ${percent}%,       /* rouge */
+      #ffeb3b 0%,
+      #ff9800 ${percent * 0.6}%,
+      #f44336 ${percent}%,
       transparent ${percent}%)`
-  };
-});
+  }
+})
 
-// Optionnel : pour rendre le slider réactif si tu veux update fuel via input
-function updateFuel(e: Event) {
-  const target = e.target as HTMLInputElement;
-  fuel.value = Number(target.value);
+function updateFuel(event: Event) {
+  const target = event.target as HTMLInputElement
+  fuel.value = Number(target.value)
 }
 </script>
 
@@ -48,8 +44,7 @@ function updateFuel(e: Event) {
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
-
-
+  
   &__label {
     display: flex;
     align-items: center;
@@ -69,8 +64,7 @@ function updateFuel(e: Event) {
       border: solid 1px;
       border-radius: 2px;
       outline: none;
-        transform: rotate(-90deg);
-  transform-origin: 50% 50%;
+      transform-origin: 50% 50%;
       transition: background 0.3s;
       &::-webkit-slider-thumb {
         -webkit-appearance: none;
