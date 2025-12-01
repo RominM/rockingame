@@ -6,7 +6,7 @@
 
     <speed id="speed" />
 
-    <p v-if="gameOver" class="game-over">{{ message }}</p> 
+    <p v-if="gameOver" class="game-over">{{ win ? "You win" : "You loose" }}</p> 
   </div>
 </template>
 
@@ -15,7 +15,7 @@ import { useRocket } from '~/composables/games/spacelander/useRocket';
 
 const {
   gameOver,
-  message,
+  win,
 } = useRocket();
 </script>
 
@@ -32,8 +32,8 @@ const {
 
   #fuel {
     position: absolute;
-    bottom: 120px;
-    left: -95px;
+    bottom: 82px;
+    left: -50px;
     transform: translate(-50%, -50%);
     transform: rotate(-90deg);
   }

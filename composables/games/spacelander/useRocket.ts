@@ -4,6 +4,7 @@ const velocityY = ref(0)
 const fuel = ref(100)
 const gameOver = ref(false)
 const message = ref('')
+const win = ref(false)
 const keys = reactive<Record<string, boolean>>({})
 
 const gravity = 0.07
@@ -24,7 +25,7 @@ export function useRocket() {
 
     if (rocket.value.y + rocket.value.height >= 580) {
       rocket.value.y = 580 - rocket.value.height
-      message.value = velocityY.value < 1.5 ? "Atterrissage réussi 🚀" : "Crash 💥"
+      win.value = velocityY.value < 1.5 ? true : false
       gameOver.value = true
     }
   }
@@ -35,9 +36,9 @@ export function useRocket() {
     velocityY.value = 0
     fuel.value = 100
     gameOver.value = false
-    message.value = ''
+    win.value = false
     Object.keys(keys).forEach(k => keys[k] = false)
   }
 
-  return { rocket, velocityX, velocityY, fuel, gameOver, message, keys, loopFn, resetGame }
+  return { rocket, velocityX, velocityY, fuel, gameOver, win, keys, loopFn, resetGame }
 }

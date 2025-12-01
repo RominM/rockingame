@@ -12,7 +12,7 @@ let ctx: CanvasRenderingContext2D | null = null
 let loop = 0
 let rocketImg: HTMLImageElement
 
-const { loopFn, rocket, keys } = useRocket()
+const { loopFn, rocket, keys, gameOver, win } = useRocket()
 
 const rocketLoaded = ref(false)
 
@@ -22,6 +22,7 @@ onMounted(() => {
 
   rocketImg = new Image()
   rocketImg.src = "/games/spaceLander/rocket.png"
+  
   rocketImg.onload = () => {
     rocketLoaded.value = true
     loop = requestAnimationFrame(loopFrame)
@@ -62,6 +63,10 @@ const loopFrame = () => {
   draw()
   loop = requestAnimationFrame(loopFrame)
 }
+
+watch(gameOver, () => {
+  rocketImg.src = !win.value ?  "/games/spaceLander/explosed.png" : "/games/spaceLander/rocket.png" 
+})
 </script>
 
 
